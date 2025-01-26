@@ -202,7 +202,7 @@ class OmegaConf:
 
     @staticmethod
     def save(
-        config: Any, f: Union[str, pathlib.Path, IO[Any]], resolve: bool = False
+        config: Any, f: Union[str, pathlib.Path, IO[Any]], resolve: bool = False, width: Optional[int]=None
     ) -> None:
         """
         Save as configuration object to a file
@@ -213,7 +213,7 @@ class OmegaConf:
         """
         if is_dataclass(config) or is_attr_class(config):
             config = OmegaConf.create(config)
-        data = OmegaConf.to_yaml(config, resolve=resolve)
+        data = OmegaConf.to_yaml(config, resolve=resolve, width=width)
         if isinstance(f, (str, pathlib.Path)):
             with io.open(os.path.abspath(f), "w", encoding="utf-8") as file:
                 file.write(data)
@@ -759,7 +759,7 @@ class OmegaConf:
                 assert False
 
     @staticmethod
-    def to_yaml(cfg: Any, *, resolve: bool = False, sort_keys: bool = False) -> str:
+    def to_yaml(cfg: Any, *, resolve: bool = False, sort_keys: bool = False, width: Optional[int]=None) -> str:
         """
         returns a yaml dump of this config object.
 
@@ -777,6 +777,7 @@ class OmegaConf:
             allow_unicode=True,
             sort_keys=sort_keys,
             Dumper=get_omega_conf_dumper(),
+            width=width,
         )
 
     @staticmethod
